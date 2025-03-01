@@ -22,5 +22,6 @@ public class Users {
     private String name;
     private String email;
     private LocalDateTime created;
+    private Boolean updated;
 
 }

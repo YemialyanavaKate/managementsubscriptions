@@ -16,7 +16,29 @@ public class UserServices {
     @Transactional
     public Users create (Users users){
         users.setCreated(LocalDateTime.now());
+        users.setUpdated(false);
         return userRepository.save(users);
+    }
+    public Users read (Long id){
+        return userRepository.findById(id).orElse(null);
+    }
+
+    @Transactional
+    public Users update (Long id){
+        return userRepository.findById(id)
+                .map(l ->{
+                    l.setUpdated(true);
+                    return l;
+                }).orElse(null);
+    }
+
+    @Transactional
+    public Users delete (Long id){
+        return userRepository.findById(id)
+                .map(l ->{
+                    userRepository.deleteById(id);
+                    return l;
+                }).orElse(null);
     }
 
 }

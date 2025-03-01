@@ -22,6 +22,7 @@ public class UserMapper {
                 .name(usersDto.getName())
                 .email(usersDto.getEmail())
                 .created(null)
+                .updated(null)
                 .build();
     }
 
