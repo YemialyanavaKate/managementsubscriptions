@@ -1,17 +1,23 @@
 package by.subscriptions.yemialyanava.managementsubscriptions.services;
 
+import by.subscriptions.yemialyanava.managementsubscriptions.models.Subscriptions;
 import by.subscriptions.yemialyanava.managementsubscriptions.models.Users;
+import by.subscriptions.yemialyanava.managementsubscriptions.repository.SubscriptionsRepository;
 import by.subscriptions.yemialyanava.managementsubscriptions.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
-public class UserServices {
+public class UserService {
     private final UserRepository userRepository;
+    private final SubscriptionsRepository subscriptionsRepository;
 
     @Transactional
     public Users create (Users users){
@@ -19,12 +25,12 @@ public class UserServices {
         users.setUpdated(false);
         return userRepository.save(users);
     }
-    public Users read (Long id){
+    public Users read (Integer id){
         return userRepository.findById(id).orElse(null);
     }
 
     @Transactional
-    public Users update (Long id, Users user){
+    public Users update (Integer id, Users user){
         return userRepository.findById(id)
                 .map(l ->{
                     user.setId(id);
@@ -36,12 +42,18 @@ public class UserServices {
     }
 
     @Transactional
-    public Users delete (Long id){
+    public Users delete (Integer id){
         return userRepository.findById(id)
                 .map(l ->{
                     userRepository.deleteById(id);
                     return l;
                 }).orElse(null);
     }
+
+    public List<Subscriptions> readSubscription (Integer id){
+        return StreamSupport.stream((subscriptionsRepository.findSubscriptionByUser(id)).spliterator(), false)
+                .collect(Collectors.toList());
+    }
+
 
 }

@@ -1,10 +1,10 @@
 package by.subscriptions.yemialyanava.managementsubscriptions.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Builder
@@ -16,6 +16,10 @@ import lombok.*;
 public class Subscriptions {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
+    @NotNull(message = "Service is a required field")
     private String service;
+    @ManyToMany(mappedBy = "subscriptions", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ToString.Exclude
+    private List<Users> users;
 }
