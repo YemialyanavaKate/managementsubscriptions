@@ -24,9 +24,12 @@ public class UserServices {
     }
 
     @Transactional
-    public Users update (Long id){
+    public Users update (Long id, Users user){
         return userRepository.findById(id)
                 .map(l ->{
+                    user.setId(id);
+                    user.setCreated(l.getCreated());
+                    userRepository.save(user);
                     l.setUpdated(true);
                     return l;
                 }).orElse(null);
