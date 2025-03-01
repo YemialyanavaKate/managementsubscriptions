@@ -1,11 +1,11 @@
 package by.subscriptions.yemialyanava.managementsubscriptions.dto;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -13,13 +13,14 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UsersDto {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     @NotNull(message = "Name is a required field")
     private String name;
     @NotNull(message = "Email is a required field")
     @Email(message = "Email should be valid")
     private String email;
+    private List<SubscriptionsDto> subscriptions;
+
 }
