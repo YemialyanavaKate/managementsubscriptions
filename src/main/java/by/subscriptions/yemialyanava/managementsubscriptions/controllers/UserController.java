@@ -64,12 +64,15 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(@PathVariable(name = "id") Integer id) {
         Users user = userServices.delete(id);
+        Map<String, String> response = new HashMap<>();
+
         if (user == null) {
-            Map<String, String> response = new HashMap<>();
             response.put("error", "User not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
-        return ResponseEntity.ok(userMapper.toDto(user));
+
+        response.put("success", "User deleted");
+        return ResponseEntity.ok(response);
     }
 
 
@@ -105,7 +108,7 @@ public class UserController {
                 .toList());
     }
 
-    @DeleteMapping("/users/{id}/subscriptions/{sub_id}")
+    @DeleteMapping("/{id}/subscriptions/{sub_id}")
     public ResponseEntity<Object> deleteSubscription(@PathVariable(name = "id") Integer userId, @PathVariable(name = "sub_id") Integer subId) {
         try {
             subscriptionService.deleteSubscription(userId, subId);

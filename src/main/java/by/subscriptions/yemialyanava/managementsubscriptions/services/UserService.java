@@ -43,11 +43,10 @@ public class UserService {
 
     @Transactional
     public Users delete (Integer id){
-        return userRepository.findById(id)
-                .map(l ->{
-                    userRepository.deleteById(id);
-                    return l;
-                }).orElse(null);
+        Users user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.delete(user);
+        return user;
     }
 
     public List<Subscriptions> readSubscription (Integer id){
