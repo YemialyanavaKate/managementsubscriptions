@@ -87,6 +87,7 @@ public class UserController {
 
         Subscriptions subscription = subscriptionMapper.toEntity(subscriptionsDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(subscriptionMapper.toDto(subscriptionService.addSubscription(id, subscription)));
+
     }
 
     @GetMapping("/{id}/subscriptions")
@@ -103,4 +104,15 @@ public class UserController {
                 .map(subscriptionMapper::toDto)
                 .toList());
     }
+
+    @DeleteMapping("/users/{id}/subscriptions/{sub_id}")
+    public ResponseEntity<Object> deleteSubscription(@PathVariable(name = "id") Integer userId, @PathVariable(name = "sub_id") Integer subId) {
+        try {
+            subscriptionService.deleteSubscription(userId, subId);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+        }
+    }
+
 }
