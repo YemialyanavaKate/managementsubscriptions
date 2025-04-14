@@ -1,5 +1,6 @@
 package by.subscriptions.yemialyanava.managementsubscriptions.services;
 
+import by.subscriptions.yemialyanava.managementsubscriptions.error.exceptions.UserNotFoundException;
 import by.subscriptions.yemialyanava.managementsubscriptions.models.Subscriptions;
 import by.subscriptions.yemialyanava.managementsubscriptions.models.Users;
 import by.subscriptions.yemialyanava.managementsubscriptions.repository.SubscriptionsRepository;
@@ -33,13 +34,13 @@ public class SubscriptionService {
                     subscription.getUsers().add(user);
                     subscriptionsRepository.save(subscription);
                     return subscription;
-                }).orElse(null);
+                }).orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
     }
 
     @Transactional
     public void deleteSubscription(Integer userId, Integer subId) {
         Users user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found"));
 
         Subscriptions subscription = subscriptionsRepository.findById(subId)
                 .orElseThrow(() -> new RuntimeException("Subscription not found"));
