@@ -12,10 +12,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,65 +27,31 @@ public class UserController {
     private final SubscriptionService subscriptionService;
 
     @PostMapping
-    public ResponseEntity<Object> create(@Valid @RequestBody UsersDto userDto, BindingResult result) {
+    public ResponseEntity<Object> create(@Valid @RequestBody UsersDto userDto) {
         Users user = userMapper.toEntity(userDto);
-        if (result.hasErrors()) {
-            Map<String, String> errors = new HashMap<>();
-            result.getFieldErrors().forEach(fieldError -> errors.put(fieldError.getField(), fieldError.getDefaultMessage()));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-        }
         return ResponseEntity.ok(userMapper.toDto(userServices.create(user)));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> read(@PathVariable(name = "id") Integer id) {
         Users user = userServices.read(id);
-        if (user == null) {
-            Map<String, String> response = new HashMap<>();
-            response.put("error", "User not found");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
         return ResponseEntity.ok(userMapper.toDto(user));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable(name = "id") Integer id, @Valid @RequestBody UsersDto usersDto, BindingResult result) {
+    public ResponseEntity<Object> update(@PathVariable(name = "id") Integer id, @Valid @RequestBody UsersDto usersDto) {
         Users user = userMapper.toEntity(usersDto);
-        if (result.hasErrors()) {
-            Map<String, String> errors = new HashMap<>();
-            result.getFieldErrors().forEach(fieldError -> errors.put(fieldError.getField(), fieldError.getDefaultMessage()));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-        }
         return ResponseEntity.ok(userMapper.toDto(userServices.update(id, user)));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(@PathVariable(name = "id") Integer id) {
-        Users user = userServices.delete(id);
-        Map<String, String> response = new HashMap<>();
-
-        if (user == null) {
-            response.put("error", "User not found");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
-
-        response.put("success", "User deleted");
-        return ResponseEntity.ok(response);
+        userServices.delete(id);
+        return ResponseEntity.ok(Map.of("success", "User deleted"));
     }
 
-
     @PostMapping("/{id}/subscriptions")
-    public ResponseEntity<Object> addSubscription(@PathVariable(name = "id") Integer id, @Valid @RequestBody SubscriptionsDto subscriptionsDto, BindingResult result) {
-        if (result.hasErrors()) {
-            Map<String, String> errors = new HashMap<>();
-            result.getFieldErrors().forEach(fieldError -> errors.put(fieldError.getField(), fieldError.getDefaultMessage()));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-        }
-
-        if (userServices.read(id) == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
-
+    public ResponseEntity<Object> addSubscription(@PathVariable(name = "id") Integer id, @Valid @RequestBody SubscriptionsDto subscriptionsDto) {
         Subscriptions subscription = subscriptionMapper.toEntity(subscriptionsDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(subscriptionMapper.toDto(subscriptionService.addSubscription(id, subscription)));
 
@@ -95,14 +59,8 @@ public class UserController {
 
     @GetMapping("/{id}/subscriptions")
     public ResponseEntity<Object> readSubscriptions(@PathVariable(name = "id") Integer id) {
-        Users user = userServices.read(id);
-        if (user == null) {
-            Map<String, String> response = new HashMap<>();
-            response.put("error", "User not found");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
-        List<Subscriptions> subscriptions = userServices.readSubscription(id);
 
+        List<Subscriptions> subscriptions = userServices.readSubscription(id);
         return ResponseEntity.ok(subscriptions.stream()
                 .map(subscriptionMapper::toDto)
                 .toList());
@@ -110,12 +68,8 @@ public class UserController {
 
     @DeleteMapping("/{id}/subscriptions/{sub_id}")
     public ResponseEntity<Object> deleteSubscription(@PathVariable(name = "id") Integer userId, @PathVariable(name = "sub_id") Integer subId) {
-        try {
-            subscriptionService.deleteSubscription(userId, subId);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
-        }
+        subscriptionService.deleteSubscription(userId, subId);
+        return ResponseEntity.ok().build();
     }
 
 }
