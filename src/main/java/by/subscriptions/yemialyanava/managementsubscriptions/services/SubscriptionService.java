@@ -1,5 +1,6 @@
 package by.subscriptions.yemialyanava.managementsubscriptions.services;
 
+import by.subscriptions.yemialyanava.managementsubscriptions.dto.SubscriptionsSumDto;
 import by.subscriptions.yemialyanava.managementsubscriptions.error.exceptions.UserNotFoundException;
 import by.subscriptions.yemialyanava.managementsubscriptions.models.Subscriptions;
 import by.subscriptions.yemialyanava.managementsubscriptions.models.Users;
@@ -53,7 +54,7 @@ public class SubscriptionService {
         }
     }
 
-    public List<Object[]> getTopSubscriptions() {
+    public List<SubscriptionsSumDto> getTopSubscriptions() {
         return subscriptionsRepository.findTop3();
     }
 }
