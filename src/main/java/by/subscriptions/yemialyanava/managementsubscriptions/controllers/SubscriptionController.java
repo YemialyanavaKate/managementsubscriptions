@@ -1,5 +1,6 @@
 package by.subscriptions.yemialyanava.managementsubscriptions.controllers;
 
+import by.subscriptions.yemialyanava.managementsubscriptions.dto.SubscriptionsSumDto;
 import by.subscriptions.yemialyanava.managementsubscriptions.services.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +17,8 @@ public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
     @GetMapping("/top")
-    public ResponseEntity<List<Object[]>> getTopSubscriptions() {
-        List<Object[]> topSubscriptions = subscriptionService.getTopSubscriptions();
+    public ResponseEntity<List<SubscriptionsSumDto>> getTopSubscriptions() {
+        List<SubscriptionsSumDto> topSubscriptions = subscriptionService.getTopSubscriptions();
         return ResponseEntity.ok(topSubscriptions);
     }
 }

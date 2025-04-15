@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -27,38 +26,38 @@ public class UserController {
     private final SubscriptionService subscriptionService;
 
     @PostMapping
-    public ResponseEntity<Object> create(@Valid @RequestBody UsersDto userDto) {
+    public ResponseEntity<UsersDto> create(@Valid @RequestBody UsersDto userDto) {
         Users user = userMapper.toEntity(userDto);
         return ResponseEntity.ok(userMapper.toDto(userServices.create(user)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> read(@PathVariable(name = "id") Integer id) {
+    public ResponseEntity<UsersDto> read(@PathVariable(name = "id") Integer id) {
         Users user = userServices.read(id);
         return ResponseEntity.ok(userMapper.toDto(user));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable(name = "id") Integer id, @Valid @RequestBody UsersDto usersDto) {
+    public ResponseEntity<UsersDto> update(@PathVariable(name = "id") Integer id, @Valid @RequestBody UsersDto usersDto) {
         Users user = userMapper.toEntity(usersDto);
         return ResponseEntity.ok(userMapper.toDto(userServices.update(id, user)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable(name = "id") Integer id) {
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@PathVariable(name = "id") Integer id) {
         userServices.delete(id);
-        return ResponseEntity.ok(Map.of("success", "User deleted"));
     }
 
     @PostMapping("/{id}/subscriptions")
-    public ResponseEntity<Object> addSubscription(@PathVariable(name = "id") Integer id, @Valid @RequestBody SubscriptionsDto subscriptionsDto) {
+    public ResponseEntity<SubscriptionsDto> addSubscription(@PathVariable(name = "id") Integer id, @Valid @RequestBody SubscriptionsDto subscriptionsDto) {
         Subscriptions subscription = subscriptionMapper.toEntity(subscriptionsDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(subscriptionMapper.toDto(subscriptionService.addSubscription(id, subscription)));
 
     }
 
     @GetMapping("/{id}/subscriptions")
-    public ResponseEntity<Object> readSubscriptions(@PathVariable(name = "id") Integer id) {
+    public ResponseEntity<List<SubscriptionsDto>> readSubscriptions(@PathVariable(name = "id") Integer id) {
 
         List<Subscriptions> subscriptions = userServices.readSubscription(id);
         return ResponseEntity.ok(subscriptions.stream()
@@ -67,9 +66,9 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}/subscriptions/{sub_id}")
-    public ResponseEntity<Object> deleteSubscription(@PathVariable(name = "id") Integer userId, @PathVariable(name = "sub_id") Integer subId) {
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteSubscription(@PathVariable(name = "id") Integer userId, @PathVariable(name = "sub_id") Integer subId) {
         subscriptionService.deleteSubscription(userId, subId);
-        return ResponseEntity.ok().build();
     }
 
 }
