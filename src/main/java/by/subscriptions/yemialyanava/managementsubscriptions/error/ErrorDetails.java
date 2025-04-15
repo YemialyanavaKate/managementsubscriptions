@@ -1,21 +1,15 @@
 package by.subscriptions.yemialyanava.managementsubscriptions.error;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 import java.util.Date;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
 public class ErrorDetails {
     private Date timestamp;
     private String message;
     private HttpStatus statusCode;
-
-    public  ErrorDetails (Date timestamp, String message, HttpStatus statusCode) {
-        this.timestamp = timestamp;
-        this.message = message;
-        this.statusCode = statusCode;
-    }
 }
