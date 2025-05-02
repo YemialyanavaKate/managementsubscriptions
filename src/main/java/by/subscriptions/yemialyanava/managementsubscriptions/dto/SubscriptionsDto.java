@@ -3,13 +3,9 @@ package by.subscriptions.yemialyanava.managementsubscriptions.dto;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-
-@Builder
+@Data
 @AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString
+@Builder
 public class SubscriptionsDto {
     private Integer id;
     @NotNull(message = "Service is a required field")
