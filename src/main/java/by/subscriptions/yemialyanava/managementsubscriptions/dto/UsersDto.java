@@ -7,12 +7,9 @@ import lombok.*;
 
 import java.util.List;
 
-@Builder
+@Data
 @AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString
+@Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UsersDto {
     private Integer id;

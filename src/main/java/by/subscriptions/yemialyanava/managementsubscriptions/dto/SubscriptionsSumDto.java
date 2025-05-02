@@ -2,12 +2,9 @@ package by.subscriptions.yemialyanava.managementsubscriptions.dto;
 
 import lombok.*;
 
-@Builder
+@Data
 @AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString
+@Builder
 public class SubscriptionsSumDto {
 
     private String service;
