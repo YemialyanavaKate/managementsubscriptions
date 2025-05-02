@@ -36,6 +36,16 @@ public class Users {
     @ToString.Exclude
     private List<Subscriptions> subscriptions;
 
+    @PostPersist
+    public void prePersist(){
+        created = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate(){
+        updated = true;
+    }
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
