@@ -3,22 +3,17 @@ package by.subscriptions.yemialyanava.managementsubscriptions.mappers;
 import by.subscriptions.yemialyanava.managementsubscriptions.dto.SubscriptionsDto;
 import by.subscriptions.yemialyanava.managementsubscriptions.dto.UsersDto;
 import by.subscriptions.yemialyanava.managementsubscriptions.models.Users;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
 
-@Component
-@AllArgsConstructor
 public class UserMapper {
-    private final SubscriptionMapper subscriptionMapper;
 
-    public UsersDto toDto (Users user){
+    public static UsersDto toDto(Users user) {
         List<SubscriptionsDto> subscriptions = user.getSubscriptions() != null ?
                 user.getSubscriptions()
                         .stream()
-                        .map(subscriptionMapper::toDto)
+                        .map(SubscriptionMapper::toDtoSubscriptions)
                         .toList() :
                 Collections.emptyList();
 
@@ -30,7 +25,7 @@ public class UserMapper {
                 .build();
     }
 
-    public Users toEntity (UsersDto usersDto) {
+    public static Users toEntity(UsersDto usersDto) {
         return Users.builder()
                 .id(usersDto.getId())
                 .name(usersDto.getName())
