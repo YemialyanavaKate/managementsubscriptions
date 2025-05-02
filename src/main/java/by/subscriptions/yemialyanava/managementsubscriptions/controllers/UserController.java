@@ -39,7 +39,7 @@ public class UserController {
         return ResponseEntity.ok(toDto(user));
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<UsersDto> update(@PathVariable(name = "id") Integer id, @Valid @RequestBody UsersDto usersDto) {
         Users user = toEntity(usersDto);
         return ResponseEntity.ok(toDto(userServices.update(id, user)));
